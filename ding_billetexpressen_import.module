@@ -1,5 +1,36 @@
 <?php
 /**
  * @file
+ * Code for the Ding Billetexpressen Import feature.
+ */
+
+include_once 'ding_billetexpressen_import.features.inc';
+/**
+ * @file
  * Module hooks are defined here.
  */
+
+/**
+ * Implements hook_menu().
+ */
+function ding_billetexpressen_import_menu() {
+  $items = array();
+  $items['admin/config/ding/billetexpressen'] = array(
+    'title' => 'Billetexpressen import settings',
+    'description' => 'Import events from Billetexpressen',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_billetexpressen_import_admin_form'),
+    'file' => 'ding_billetexpressen_import.admin.inc',
+  );
+  $items['admin/config/ding/billetexpressen/add'] = array(
+    'title' => 'Add organizer mapping.',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_billetexpressen_import_add_mapping'),
+    'file' => 'ding_billetexpressen_import.admin.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  return $items;
+}
