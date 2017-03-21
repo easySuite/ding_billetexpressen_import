@@ -23,13 +23,15 @@ function ding_billetexpressen_import_feeds_importer_default() {
         'auto_detect_feeds' => 1,
         'use_pubsubhubbub' => 0,
         'designated_hub' => '',
-        'request_timeout' => '300',
+        'request_timeout' => '30',
       ),
     ),
     'parser' => array(
       'plugin_key' => 'FeedsExXml',
       'config' => array(
-        'use_tidy' => 1,
+        'context' => array(
+          'value' => '/Events/Event',
+        ),
         'sources' => array(
           'unique_id' => array(
             'name' => 'Unique Id',
@@ -248,14 +250,12 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'weight' => '27',
           ),
         ),
-        'context' => array(
-          'value' => '/Events/Event',
-        ),
         'display_errors' => 1,
+        'debug_mode' => 1,
         'source_encoding' => array(
           0 => 'auto',
         ),
-        'debug_mode' => 1,
+        'use_tidy' => 1,
       ),
     ),
     'processor' => array(
@@ -289,59 +289,59 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'source' => 'category',
             'target' => 'field_ding_event_category',
             'term_search' => '0',
-            'autocreate' => 1,
+            'autocreate' => 0,
           ),
           5 => array(
+            'source' => 'subcategory',
+            'target' => 'field_ding_event_tags',
+            'term_search' => '0',
+            'autocreate' => 1,
+          ),
+          6 => array(
             'source' => 'date_start',
             'target' => 'field_ding_event_date:start',
             'unique' => FALSE,
           ),
-          6 => array(
+          7 => array(
             'source' => 'date_end',
             'target' => 'field_ding_event_date:end',
             'unique' => FALSE,
           ),
-          7 => array(
+          8 => array(
             'source' => 'image_url',
             'target' => 'field_ding_event_title_image',
             'unique' => FALSE,
           ),
-          8 => array(
+          9 => array(
             'source' => 'library',
             'target' => 'og_group_ref:etid',
             'unique' => FALSE,
           ),
-          9 => array(
+          10 => array(
             'source' => 'location_address_1',
             'target' => 'field_ding_event_location:thoroughfare',
             'unique' => FALSE,
           ),
-          10 => array(
+          11 => array(
             'source' => 'location_address_2',
             'target' => 'field_ding_event_location:premise',
             'unique' => FALSE,
           ),
-          11 => array(
+          12 => array(
             'source' => 'location_zip',
             'target' => 'field_ding_event_location:postal_code',
             'unique' => FALSE,
           ),
-          12 => array(
+          13 => array(
             'source' => 'location_city',
             'target' => 'field_ding_event_location:locality',
             'unique' => FALSE,
           ),
-          13 => array(
+          14 => array(
             'source' => 'rooms',
             'target' => 'field_ding_event_rooms',
             'term_search' => '0',
             'autocreate' => 1,
-          ),
-          14 => array(
-            'source' => 'subcategory',
-            'target' => 'field_ding_event_tags',
-            'term_search' => '0',
-            'autocreate' => 0,
           ),
         ),
         'update_existing' => '2',

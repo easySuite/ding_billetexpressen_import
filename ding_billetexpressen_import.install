@@ -1,0 +1,46 @@
+<?php
+/**
+ * @file
+ * Define module tables and perform install/uninstall functionality.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ding_billetexpressen_import_schema() {
+  $schema['ding_billetexpressen_import_tickets'] = array(
+    'description' => 'Save tickets info for each node.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Id of event (reference to nid field form node table).',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'ticketsalelink' => array(
+        'description' => 'Ticket sale link.',
+        'type' => 'varchar',
+        'length' => 512,
+        'default' => NULL,
+      ),
+      'eventwithticketsale' => array(
+        'description' => 'Bool value of the ticket info',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'tickets' => array(
+        'description' => 'Serialized array of the info of the tickets.',
+        'type' => 'blob',
+      ),
+    ),
+    'unique keys' => array(
+      'uk_nid_id' => array('nid', 'ticketsalelink'),
+    ),
+    'primary key' => array('nid'),
+  );
+
+  return $schema;
+}
