@@ -286,58 +286,47 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'unique' => FALSE,
           ),
           4 => array(
-            'source' => 'category',
-            'target' => 'field_ding_event_category',
-            'term_search' => '0',
-            'autocreate' => 0,
-          ),
-          5 => array(
             'source' => 'subcategory',
             'target' => 'field_ding_event_tags',
             'term_search' => '0',
             'autocreate' => 1,
           ),
-          6 => array(
+          5 => array(
             'source' => 'date_start',
             'target' => 'field_ding_event_date:start',
             'unique' => FALSE,
           ),
-          7 => array(
+          6 => array(
             'source' => 'date_end',
             'target' => 'field_ding_event_date:end',
             'unique' => FALSE,
           ),
-          8 => array(
+          7 => array(
             'source' => 'image_url',
             'target' => 'field_ding_event_title_image',
             'unique' => FALSE,
           ),
-          9 => array(
-            'source' => 'library',
-            'target' => 'og_group_ref:etid',
-            'unique' => FALSE,
-          ),
-          10 => array(
+          8 => array(
             'source' => 'location_address_1',
             'target' => 'field_ding_event_location:thoroughfare',
             'unique' => FALSE,
           ),
-          11 => array(
+          9 => array(
             'source' => 'location_address_2',
             'target' => 'field_ding_event_location:premise',
             'unique' => FALSE,
           ),
-          12 => array(
+          10 => array(
             'source' => 'location_zip',
             'target' => 'field_ding_event_location:postal_code',
             'unique' => FALSE,
           ),
-          13 => array(
+          11 => array(
             'source' => 'location_city',
             'target' => 'field_ding_event_location:locality',
             'unique' => FALSE,
           ),
-          14 => array(
+          12 => array(
             'source' => 'rooms',
             'target' => 'field_ding_event_rooms',
             'term_search' => '0',

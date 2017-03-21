@@ -77,7 +77,6 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
 
   // Map node library.
   $libraries = variable_get('ding_billetexpressen_import_libraries', array());
-  $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = '';
   foreach ($libraries as $library) {
     if ($library['mapping'] == $item['library']) {
       $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $library['library'];
