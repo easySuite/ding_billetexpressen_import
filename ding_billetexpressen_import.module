@@ -1,5 +1,163 @@
 <?php
 /**
  * @file
+ * Code for the Ding Billetexpressen Import feature.
+ */
+
+include_once 'ding_billetexpressen_import.features.inc';
+/**
+ * @file
  * Module hooks are defined here.
  */
+
+/**
+ * Implements hook_menu().
+ */
+function ding_billetexpressen_import_menu() {
+  $items = array();
+  $items['admin/config/ding/billetexpressen'] = array(
+    'title' => 'Billetexpressen import settings',
+    'description' => 'Import events from Billetexpressen',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_billetexpressen_import_admin_form'),
+    'file' => 'ding_billetexpressen_import.admin.inc',
+  );
+  $items['billetexpressen/library/%/delete'] = array(
+    'title' => 'Delete library from mapping',
+    'description' => 'Delete callback for a mapped library',
+    'delivery callback' => 'ajax_deliver',
+    'page callback' => 'ding_billetexpressen_library_mapping_delete',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ding_billetexpressen_import.admin.inc',
+  );
+  $items['billetexpressen/category/%/delete'] = array(
+    'title' => 'Delete category from mapping',
+    'description' => 'Delete callback for a mapped category',
+    'delivery callback' => 'ajax_deliver',
+    'page callback' => 'ding_billetexpressen_category_mapping_delete',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ding_billetexpressen_import.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ding_billetexpressen_import_theme($existing, $type, $theme, $path) {
+  return array(
+    'ding_billetexpressen_libraries_table' => array(
+      'render element' => 'form',
+      'file' => 'ding_billetexpressen_import.admin.inc',
+    ),
+    'ding_billetexpressen_categories_table' => array(
+      'render element' => 'form',
+      'file' => 'ding_billetexpressen_import.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_feeds_presave().
+ */
+function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity, $item) {
+  // Map node category.
+  $categories = variable_get('ding_billetexpressen_import_categories', array());
+  foreach ($categories as $category) {
+    if ($category['mapping'] == $item['category']) {
+      $entity->field_ding_event_category[LANGUAGE_NONE][0]['tid'] = $category['category'];
+    }
+  }
+
+  // Map node library.
+  $libraries = variable_get('ding_billetexpressen_import_libraries', array());
+  foreach ($libraries as $library) {
+    if ($library['mapping'] == $item['library']) {
+      $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $library['library'];
+    }
+  }
+
+  // Map node status.
+  $status = variable_get('ding_billetexpressen_import_status', 0);
+  $entity->status = $status;
+}
+
+/**
+ * Implements hook_feeds_after_save().
+ */
+function ding_billetexpressen_import_feeds_after_save(FeedsSource $source, $entity, $item, $entity_id) {
+  $tickets = array();
+  if (is_array($item['tickets'])) {
+    foreach ($item['tickets'] as $id => $ticket) {
+      $tickets[] = array(
+        'name' => $item['ticket_name'][$id],
+        'price' => $item['ticket_price'][$id],
+        'availabletickets' => $item['tickets_availabletickets'][$id],
+        'soldout' => $item['ticket_soldout'][$id] ? 1 : 0,
+      );
+    }
+  }
+  else {
+    $tickets[] = array(
+      'name' => $item['ticket_name'],
+      'price' => $item['ticket_price'],
+      'availabletickets' => $item['tickets_availabletickets'],
+      'soldout' => $item['ticket_soldout'] ? 1 : 0,
+    );
+  }
+
+  db_merge('ding_billetexpressen_import_tickets')
+    ->key(array('nid' => (int) $entity->nid))
+    ->fields(array(
+      'ticketsalelink' => $item['ticketsalelink'],
+      'eventwithticketsale' => $item['eventwithticketsale'] ? 1 : 0,
+      'tickets' => serialize($tickets),
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function ding_billetexpressen_import_node_view($node, $view_mode, $langcode) {
+  $result = db_select('ding_billetexpressen_import_tickets', 'tickets')
+    ->condition('nid', $node->nid)
+    ->fields('tickets')
+    ->execute()
+    ->fetchAll();
+
+  foreach ($result as $item) {
+    $tickets = array();
+    if (!empty($item->tickets)) {
+      $tickets = unserialize($item->tickets);
+    }
+    $markup = '';
+    if ($item->eventwithticketsale) {
+      $markup .=  "<h3>" . t("Tickets available") . ":</h3>";
+      foreach ($tickets as $ticket) {
+        if (!$ticket['soldout']) {
+          $markup .= t('Sold out');
+        }
+        else {
+          $markup .= $ticket['name'] . ' (' . $ticket['price'] . ' ' . t('kr.') . ') - ' . $ticket['availabletickets'] . ' ' . t('available tickets');
+        }
+        $markup .= l(t('Book a ticket'), $item->ticketsalelink, array('attributes' => array('class' => array('ticket-available', 'ding-billetexpressen-ticket'))));
+      }
+    }
+    $node->content['tickets'] = array(
+      '#markup' => $markup,
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'ding_billetexpressen_import') . '/css/ding_billetexpressen_import.css'
+        ),
+      ),
+      '#weight' => 20,
+    );
+  }
+}
