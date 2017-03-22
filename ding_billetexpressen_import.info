@@ -4,6 +4,7 @@ core = 7.x
 package = Ding!
 dependencies[] = ctools
 dependencies[] = feeds
+dependencies[] = feeds_ex
 configure[] = admin/config/ding/billetexpressen
 features[ctools][] = feeds:feeds_importer_default:1
 features[features_api][] = api:2
