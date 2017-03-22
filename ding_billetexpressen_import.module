@@ -161,8 +161,3 @@ function ding_billetexpressen_import_node_view($node, $view_mode, $langcode) {
     );
   }
 }
-
-
-// 6CBF6841C021471CBC4870D9070D6D72_6527
-// 808FDB4F6AA8486E9A100BFCA10D8430_8940
-// 70F85DA445DB4DFCB1C007B6E3B8EE0B_7752
