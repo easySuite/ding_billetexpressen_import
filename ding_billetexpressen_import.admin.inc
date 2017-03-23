@@ -136,6 +136,8 @@ function ding_billetexpressen_import_admin_form_submit($form, &$form_state) {
   variable_set('ding_billetexpressen_import_categories', $ding_billetexpressen_import_categories);
 
   variable_set('ding_billetexpressen_import_status', $values['ding_billetexpressen_import_status']);
+
+  variable_set('ding_billetexpressen_import_url', $values['ding_billetexpressen_import_url']);
 }
 
 /**
