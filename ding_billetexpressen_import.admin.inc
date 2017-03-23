@@ -97,7 +97,7 @@ function ding_billetexpressen_import_admin_form($form, &$form_state) {
     '#type' => 'radios',
     '#options' => array(0 => t('Unpublished'), 1 => t('Published')),
     '#title' => t('Imported nodes status'),
-    '#default_value' => variable_get('ding_billetexpressen_import_status', 0),
+    '#default_value' => variable_get('ding_billetexpressen_import_status', 1),
   );
 
   $form['submit'] = array(
