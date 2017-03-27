@@ -217,15 +217,20 @@ function ding_billetexpressen_import_get_not_mapped_categories() {
  * Theme library mapping table on the admin page.
  */
 function theme_ding_billetexpressen_libraries_table($variables) {
+  drupal_add_library('system', 'drupal.ajax');
+
   $form = $variables['form'];
   $header = array(t('Mapping'), t('Library'), t('Operation'));
 
   $rows = array();
   foreach ($form['mapping']['#value'] as $item) {
     $rows[$item['library']] = array(
-      'mapping' => $item['mapping'],
-      'library' => $form['libraries']['#value'][$item['library']],
-      'add' => l(t('Delete'), "billetexpressen/library/" . $item['library'] . "/delete", array('attributes' => array('class' => 'use-ajax'))),
+      'data' => array(
+        'mapping' => $item['mapping'],
+        'library' => $form['libraries']['#value'][$item['library']],
+        'add' => l(t('Delete'), "billetexpressen/library/" . $item['library'] . "/delete/nojs", array('attributes' => array('class' => 'use-ajax'))),
+      ),
+      'class' => array('ding-billetexpressen-library-' . $item['library']),
     );
   }
 
@@ -243,15 +248,20 @@ function theme_ding_billetexpressen_libraries_table($variables) {
  * Theme category mapping table on the admin page.
  */
 function theme_ding_billetexpressen_categories_table($variables) {
+  drupal_add_library('system', 'drupal.ajax');
+
   $form = $variables['form'];
   $header = array(t('Mapping'), t('Category'), t('Operation'));
 
   $rows = array();
   foreach ($form['mapping']['#value'] as $item) {
     $rows[$item['category']] = array(
-      'mapping' => $item['mapping'],
-      'category' => $form['categories']['#value'][$item['category']],
-      'add' => l(t('Delete'), "billetexpressen/category/" . $item['category'] . "/delete", array('attributes' => array('class' => 'use-ajax'))),
+      'data' => array(
+        'mapping' => $item['mapping'],
+        'category' => $form['categories']['#value'][$item['category']],
+        'add' => l(t('Delete'), "billetexpressen/category/" . $item['category'] . "/delete/nojs", array('attributes' => array('class' => 'use-ajax'))),
+      ),
+      'class' => array('ding-billetexpressen-category-' . $item['category']),
     );
   }
 
@@ -328,8 +338,13 @@ function ding_billetexpressen_import_category_ajax_callback($form, &$form_state)
  *
  * @param int $library
  *   Library id.
+ * @param string $ajax
+ *   Request type.
+ *
+ * @return
+ *    Ajax commands or page refresh.
  */
-function ding_billetexpressen_library_mapping_delete($library) {
+function ding_billetexpressen_library_mapping_delete($library, $ajax) {
   $mapped_libraries = variable_get('ding_billetexpressen_import_mapped_libraries', array());
   $ding_billetexpressen_import_libraries = variable_get('ding_billetexpressen_import_libraries', array());
 
@@ -340,6 +355,20 @@ function ding_billetexpressen_library_mapping_delete($library) {
     variable_set('ding_billetexpressen_import_libraries', $ding_billetexpressen_import_libraries);
     variable_set('ding_billetexpressen_import_mapped_libraries', $mapped_libraries);
   }
+
+  if ($ajax == 'ajax') {
+    $commands = array();
+    $commands[] = ajax_command_remove('.ding-billetexpressen-library-' . $library);
+
+    return array(
+      '#type' => 'ajax',
+      '#commands' => $commands,
+    );
+  }
+  else {
+    drupal_set_message(t('Library mapping was deleted.'));
+    drupal_goto('admin/config/ding/billetexpressen');
+  }
 }
 
 /**
@@ -347,8 +376,13 @@ function ding_billetexpressen_library_mapping_delete($library) {
  *
  * @param int $category
  *   Category id.
+ * @param string $ajax
+ *   Request type.
+ *
+ * @return
+ *    Ajax commands or page refresh.
  */
-function ding_billetexpressen_category_mapping_delete($category) {
+function ding_billetexpressen_category_mapping_delete($category, $ajax) {
   $mapped_categories = variable_get('ding_billetexpressen_import_mapped_categories', array());
   $ding_billetexpressen_import_categories = variable_get('ding_billetexpressen_import_categories', array());
 
@@ -358,5 +392,19 @@ function ding_billetexpressen_category_mapping_delete($category) {
 
     variable_set('ding_billetexpressen_import_categories', $ding_billetexpressen_import_categories);
     variable_set('ding_billetexpressen_import_mapped_categories', $mapped_categories);
+  }
+
+  if ($ajax == 'ajax') {
+    $commands = array();
+    $commands[] = ajax_command_remove('.ding-billetexpressen-category-' . $category);
+
+    return array(
+      '#type' => 'ajax',
+      '#commands' => $commands,
+    );
+  }
+  else {
+    drupal_set_message(t('Library mapping was deleted.'));
+    drupal_goto('admin/config/ding/billetexpressen');
   }
 }
