@@ -36,7 +36,7 @@ function ding_billetexpressen_import_menu() {
     'title' => 'Delete category from mapping',
     'description' => 'Delete callback for a mapped category',
     'page callback' => 'ding_billetexpressen_category_mapping_delete',
-    'page arguments' => array(2),
+    'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
     'access arguments' => array('administer site configuration'),
     'file' => 'ding_billetexpressen_import.admin.inc',
@@ -45,7 +45,6 @@ function ding_billetexpressen_import_menu() {
 
   return $items;
 }
-
 
 /**
  * Implements hook_theme().

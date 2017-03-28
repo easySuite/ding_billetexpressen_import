@@ -115,28 +115,7 @@ function ding_billetexpressen_import_admin_form($form, &$form_state) {
 function ding_billetexpressen_import_admin_form_submit($form, &$form_state) {
   $values = $form_state['values'];
 
-  $ding_billetexpressen_import_libraries = $form_state['libraries_mappings'];
-
-  $libraries_mapping = $values['ding_billetexpressen_import_libraries']['add'];
-  if (!empty($libraries_mapping['mapping']) && !empty($libraries_mapping['library'])) {
-    unset($libraries_mapping['op']);
-    $ding_billetexpressen_import_libraries[] = $libraries_mapping;
-  }
-
-  variable_set('ding_billetexpressen_import_libraries', $ding_billetexpressen_import_libraries);
-
-  $ding_billetexpressen_import_categories = $form_state['categories_mappings'];
-
-  $categories_mapping = $values['ding_billetexpressen_import_categories']['add'];
-  if (!empty($categories_mapping['mapping']) && !empty($categories_mapping['library'])) {
-    unset($categories_mapping['op']);
-    $ding_billetexpressen_import_categories[] = $categories_mapping;
-  }
-
-  variable_set('ding_billetexpressen_import_categories', $ding_billetexpressen_import_categories);
-
   variable_set('ding_billetexpressen_import_status', $values['ding_billetexpressen_import_status']);
-
   variable_set('ding_billetexpressen_import_url', $values['ding_billetexpressen_import_url']);
 }
 
@@ -284,14 +263,17 @@ function ding_billetexpressen_import_map_library($form, &$form_state) {
   if (!empty($values['mapping'] && !empty($values['library']))) {
     $libraries = $form['ding_billetexpressen_import_libraries']['libraries']['#value'];
 
+    // Add library to the mapped list.
     $mapped_libraries = variable_get('ding_billetexpressen_import_mapped_libraries', array());
     $mapped_libraries[$values['library']] = $libraries[$values['library']];
     variable_set('ding_billetexpressen_import_mapped_libraries', $mapped_libraries);
 
+    // Save library mapping.
     $form_state['libraries_mappings'][$values['library']] = array(
       'mapping' => $values['mapping'],
       'library' => $values['library'],
     );
+    variable_set('ding_billetexpressen_import_libraries', $form_state['libraries_mappings']);
   }
 
   $form_state['rebuild'] = TRUE;
@@ -313,14 +295,17 @@ function ding_billetexpressen_import_map_category($form, &$form_state) {
   if (!empty($values['mapping'] && !empty($values['category']))) {
     $categories = $form['ding_billetexpressen_import_categories']['categories']['#value'];
 
+    // Add category to the mapped list.
     $mapped_categories = variable_get('ding_billetexpressen_import_mapped_categories', array());
     $mapped_categories[$values['category']] = $categories[$values['category']];
     variable_set('ding_billetexpressen_import_mapped_categories', $mapped_categories);
 
+    // Save category mapping.
     $form_state['categories_mappings'][$values['category']] = array(
       'mapping' => $values['mapping'],
       'category' => $values['category'],
     );
+    variable_set('ding_billetexpressen_import_categories', $form_state['categories_mappings']);
   }
 
   $form_state['rebuild'] = TRUE;
@@ -347,29 +332,28 @@ function ding_billetexpressen_import_category_ajax_callback($form, &$form_state)
 function ding_billetexpressen_library_mapping_delete($library, $ajax) {
   drupal_add_library('system', 'drupal.ajax');
 
-  $mapped_libraries = variable_get('ding_billetexpressen_import_mapped_libraries', array());
-  $ding_billetexpressen_import_libraries = variable_get('ding_billetexpressen_import_libraries', array());
-
   if (!empty($library)) {
+    $mapped_libraries = variable_get('ding_billetexpressen_import_mapped_libraries', array());
     unset($mapped_libraries[$library]);
-    unset($ding_billetexpressen_import_libraries[$library]);
-
-    variable_set('ding_billetexpressen_import_libraries', $ding_billetexpressen_import_libraries);
     variable_set('ding_billetexpressen_import_mapped_libraries', $mapped_libraries);
-  }
 
-  if ($ajax) {
-    $commands = array();
-    $commands[] = ajax_command_remove('.ding-billetexpressen-library-' . $library);
+    $ding_billetexpressen_import_libraries = variable_get('ding_billetexpressen_import_libraries', array());
+    unset($ding_billetexpressen_import_libraries[$library]);
+    variable_set('ding_billetexpressen_import_libraries', $ding_billetexpressen_import_libraries);
 
-    return array(
-      '#type' => 'ajax',
-      '#commands' => $commands,
-    );
-  }
-  else {
-    drupal_set_message(t('Library mapping was deleted.'));
-    drupal_goto('admin/config/ding/billetexpressen');
+    if ($ajax) {
+      $commands = array();
+      $commands[] = ajax_command_remove('.ding-billetexpressen-library-' . $library);
+
+      return array(
+        '#type' => 'ajax',
+        '#commands' => $commands,
+      );
+    }
+    else {
+      drupal_set_message(t('Library mapping was deleted.'));
+      drupal_goto('admin/config/ding/billetexpressen');
+    }
   }
 }
 
@@ -387,28 +371,27 @@ function ding_billetexpressen_library_mapping_delete($library, $ajax) {
 function ding_billetexpressen_category_mapping_delete($category, $ajax) {
   drupal_add_library('system', 'drupal.ajax');
 
-  $mapped_categories = variable_get('ding_billetexpressen_import_mapped_categories', array());
-  $ding_billetexpressen_import_categories = variable_get('ding_billetexpressen_import_categories', array());
-
   if (!empty($category)) {
+    $mapped_categories = variable_get('ding_billetexpressen_import_mapped_categories', array());
     unset($mapped_categories[$category]);
-    unset($ding_billetexpressen_import_categories[$category]);
-
-    variable_set('ding_billetexpressen_import_categories', $ding_billetexpressen_import_categories);
     variable_set('ding_billetexpressen_import_mapped_categories', $mapped_categories);
-  }
 
-  if ($ajax == 'ajax') {
-    $commands = array();
-    $commands[] = ajax_command_remove('.ding-billetexpressen-category-' . $category);
+    $ding_billetexpressen_import_categories = variable_get('ding_billetexpressen_import_categories', array());
+    unset($ding_billetexpressen_import_categories[$category]);
+    variable_set('ding_billetexpressen_import_categories', $ding_billetexpressen_import_categories);
 
-    return array(
-      '#type' => 'ajax',
-      '#commands' => $commands,
-    );
-  }
-  else {
-    drupal_set_message(t('Library mapping was deleted.'));
-    drupal_goto('admin/config/ding/billetexpressen');
+    if ($ajax) {
+      $commands = array();
+      $commands[] = ajax_command_remove('.ding-billetexpressen-category-' . $category);
+
+      return array(
+        '#type' => 'ajax',
+        '#commands' => $commands,
+      );
+    }
+    else {
+      drupal_set_message(t('Library mapping was deleted.'));
+      drupal_goto('admin/config/ding/billetexpressen');
+    }
   }
 }
