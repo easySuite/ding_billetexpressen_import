@@ -9,7 +9,6 @@ include_once 'ding_billetexpressen_import.features.inc';
  * @file
  * Module hooks are defined here.
  */
-
 /**
  * Implements hook_menu().
  */
@@ -23,7 +22,7 @@ function ding_billetexpressen_import_menu() {
     'page arguments' => array('ding_billetexpressen_import_admin_form'),
     'file' => 'ding_billetexpressen_import.admin.inc',
   );
-  $items['billetexpressen/library/%/delete/nojs'] = array(
+  $items['billetexpressen/library/%/delete/%ctools_js'] = array(
     'title' => 'Delete library from mapping',
     'description' => 'Delete callback for a mapped library',
     'page callback' => 'ding_billetexpressen_library_mapping_delete',
@@ -31,27 +30,22 @@ function ding_billetexpressen_import_menu() {
     'type' => MENU_CALLBACK,
     'access arguments' => array('administer site configuration'),
     'file' => 'ding_billetexpressen_import.admin.inc',
-  );
-  $items['billetexpressen/library/%/delete/ajax'] = array(
     'delivery callback' => 'ajax_deliver',
-  ) + $items['billetexpressen/library/%/delete/nojs'];
-
-  $items['billetexpressen/category/%/delete/nojs'] = array(
+  );
+  $items['billetexpressen/category/%/delete/%ctools_js'] = array(
     'title' => 'Delete category from mapping',
     'description' => 'Delete callback for a mapped category',
-    'delivery callback' => 'ajax_deliver',
     'page callback' => 'ding_billetexpressen_category_mapping_delete',
     'page arguments' => array(2),
     'type' => MENU_CALLBACK,
     'access arguments' => array('administer site configuration'),
     'file' => 'ding_billetexpressen_import.admin.inc',
-  );
-  $items['billetexpressen/category/%/delete/ajax'] = array(
     'delivery callback' => 'ajax_deliver',
-  ) + $items['billetexpressen/category/%/delete/nojs'];
+  );
 
   return $items;
 }
+
 
 /**
  * Implements hook_theme().
