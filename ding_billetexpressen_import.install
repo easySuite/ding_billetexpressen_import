@@ -11,6 +11,11 @@ function ding_billetexpressen_import_schema() {
   $schema['ding_billetexpressen_import_tickets'] = array(
     'description' => 'Save tickets info for each node.',
     'fields' => array(
+      'tid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
       'nid' => array(
         'description' => 'Id of event (reference to nid field form node table).',
         'type' => 'int',
@@ -21,7 +26,7 @@ function ding_billetexpressen_import_schema() {
       'ticketsalelink' => array(
         'description' => 'Ticket sale link.',
         'type' => 'varchar',
-        'length' => 512,
+        'length' => 2047,
         'default' => NULL,
       ),
       'eventwithticketsale' => array(
@@ -36,10 +41,7 @@ function ding_billetexpressen_import_schema() {
         'type' => 'blob',
       ),
     ),
-    'unique keys' => array(
-      'uk_nid_id' => array('nid', 'ticketsalelink'),
-    ),
-    'primary key' => array('nid'),
+    'primary key' => array('tid'),
   );
 
   return $schema;
