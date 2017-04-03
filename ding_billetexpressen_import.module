@@ -69,8 +69,10 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   // Map node category.
   $categories = variable_get('ding_billetexpressen_import_categories', array());
   foreach ($categories as $category) {
-    if ($category['mapping'] == $item['category']) {
-      $entity->field_ding_event_category[LANGUAGE_NONE][0]['tid'] = $category['category'];
+    if (!empty($item['category'])) {
+      if ($category['mapping'] == $item['category']) {
+        $entity->field_ding_event_category[LANGUAGE_NONE][0]['tid'] = $category['category'];
+      }
     }
   }
 
