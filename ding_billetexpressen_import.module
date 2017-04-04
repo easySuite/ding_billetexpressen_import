@@ -100,7 +100,7 @@ function ding_billetexpressen_import_feeds_after_save(FeedsSource $source, $enti
         'name' => $item['ticket_name'][$id],
         'price' => $item['ticket_price'][$id],
         'availabletickets' => $item['tickets_availabletickets'][$id],
-        'soldout' => $item['ticket_soldout'][$id] ? 1 : 0,
+        'soldout' => ($item['ticket_soldout'][$id] === 'true') ? 1 : 0,
       );
     }
   }
@@ -109,7 +109,7 @@ function ding_billetexpressen_import_feeds_after_save(FeedsSource $source, $enti
       'name' => $item['ticket_name'],
       'price' => $item['ticket_price'],
       'availabletickets' => $item['tickets_availabletickets'],
-      'soldout' => $item['ticket_soldout'] ? 1 : 0,
+      'soldout' => ($item['ticket_soldout'] === 'true') ? 1 : 0,
     );
   }
 
@@ -117,7 +117,7 @@ function ding_billetexpressen_import_feeds_after_save(FeedsSource $source, $enti
     ->key(array('nid' => (int) $entity->nid))
     ->fields(array(
       'ticketsalelink' => $item['ticketsalelink'],
-      'eventwithticketsale' => $item['eventwithticketsale'] ? 1 : 0,
+      'eventwithticketsale' => ($item['eventwithticketsale'] === 'true') ? 1 : 0,
       'tickets' => serialize($tickets),
     ))
     ->execute();
@@ -140,17 +140,26 @@ function ding_billetexpressen_import_node_view($node, $view_mode, $langcode) {
     }
     $markup = '';
     if ($item->eventwithticketsale) {
+      $soldout = TRUE;
       $markup .=  "<h3>" . t("Tickets available") . ":</h3>";
-      foreach ($tickets as $ticket) {
-        if (!$ticket['soldout']) {
-          $markup .= t('Sold out');
+      if (!empty($tickets)) {
+        $markup .= '<ul>';
+        foreach ($tickets as $ticket) {
+          if (!$ticket['soldout']) {
+            $soldout = FALSE;
+          }
+          $markup .= '<li><strong>' . $ticket['name'] . '</strong>, ' . $ticket['price'] . ' ' . t('kr.') . ' (<em>' . $ticket['availabletickets'] . ' ' . t('available tickets') . '</em>)</li>';
         }
-        else {
-          $markup .= $ticket['name'] . ' (' . $ticket['price'] . ' ' . t('kr.') . ') - ' . $ticket['availabletickets'] . ' ' . t('available tickets');
-        }
+        $markup .= '</ul>';
+      }
+      if (!$soldout) {
         $markup .= l(t('Book a ticket'), $item->ticketsalelink, array('attributes' => array('class' => array('ticket-available', 'ding-billetexpressen-ticket'))));
       }
+      else {
+        $markup .= '<div class="ticket-info ding-billetexpressen-ticket">' . t('Sold out') . '</div>';
+      }
     }
+
     $node->content['tickets'] = array(
       '#markup' => $markup,
       '#attached' => array(
@@ -178,4 +187,15 @@ function ding_billetexpressen_import_form_feeds_import_form_alter(&$form, &$form
         ),
       );
   }
+}
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Delete tickets relations on node remove.
+ */
+function ding_billetexpressen_import_node_delete($node) {
+  db_delete('ding_billetexpressen_import_tickets')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
