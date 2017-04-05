@@ -148,7 +148,16 @@ function ding_billetexpressen_import_node_view($node, $view_mode, $langcode) {
         $markup .= '</ul>';
       }
       if (!$item->soldout) {
-        $markup .= l(t('Book a ticket'), $item->ticketsalelink, array('attributes' => array('class' => array('ticket-available', 'ding-billetexpressen-ticket'))));
+        $markup .= l(
+          t('Book a ticket'),
+          $item->ticketsalelink,
+          array(
+            'attributes' => array(
+              'class' => array('ticket-available', 'ding-billetexpressen-ticket'),
+              'target'=>'_blank'
+            ),
+          )
+        );
       }
       else {
         $markup .= '<div class="ticket-info ding-billetexpressen-ticket">' . t('Sold out') . '</div>';
