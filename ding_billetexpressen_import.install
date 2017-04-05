@@ -30,7 +30,14 @@ function ding_billetexpressen_import_schema() {
         'default' => NULL,
       ),
       'eventwithticketsale' => array(
-        'description' => 'Bool value of the ticket info',
+        'description' => 'Bool value of the ticket info.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'soldout' => array(
+        'description' => 'Sold out.',
         'type' => 'int',
         'size' => 'tiny',
         'default' => 0,
@@ -45,4 +52,18 @@ function ding_billetexpressen_import_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Add soldout field to the ding_billetexpressen_import_tickets table.
+ */
+function ding_billetexpressen_import_update_7001() {
+  $spec = array(
+    'description' => 'Sold out.',
+    'type' => 'int',
+    'size' => 'tiny',
+    'default' => 0,
+    'unsigned' => TRUE,
+  );
+  db_add_field('ding_billetexpressen_import_tickets', 'soldout', $spec);
 }
