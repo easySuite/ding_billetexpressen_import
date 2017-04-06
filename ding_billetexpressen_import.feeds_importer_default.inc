@@ -307,26 +307,31 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'unique' => FALSE,
           ),
           8 => array(
+            'source' => 'image_url',
+            'target' => 'field_ding_event_list_image',
+            'unique' => FALSE,
+          ),
+          9 => array(
             'source' => 'location_address_1',
             'target' => 'field_ding_event_location:thoroughfare',
             'unique' => FALSE,
           ),
-          9 => array(
+          10 => array(
             'source' => 'location_address_2',
             'target' => 'field_ding_event_location:premise',
             'unique' => FALSE,
           ),
-          10 => array(
+          11 => array(
             'source' => 'location_zip',
             'target' => 'field_ding_event_location:postal_code',
             'unique' => FALSE,
           ),
-          11 => array(
+          12 => array(
             'source' => 'location_city',
             'target' => 'field_ding_event_location:locality',
             'unique' => FALSE,
           ),
-          12 => array(
+          13 => array(
             'source' => 'rooms',
             'target' => 'field_ding_event_rooms',
             'term_search' => '0',
@@ -343,7 +348,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
     'update' => 0,
     'import_period' => '0',
     'expire_period' => 3600,
-    'import_on_create' => 0,
+    'import_on_create' => 1,
     'process_in_background' => 0,
   );
   $export['billetexpressen_events'] = $feeds_importer;
