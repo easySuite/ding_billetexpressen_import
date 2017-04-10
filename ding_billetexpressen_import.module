@@ -91,11 +91,13 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   // Convert date to UTC.
   $date_start = new DateTime($item['date_start']);
   $date_start->setTimezone(new DateTimeZone('UTC'));
-  $entity->field_ding_event_date[LANGUAGE_NONE][0]['value'] = $date_start->date;
+  $value = $date_start->format('Y:m:d H:i:s');
+  $entity->field_ding_event_date[LANGUAGE_NONE][0]['value'] = $value;
 
   $date_end = new DateTime($item['date_end']);
   $date_end->setTimezone(new DateTimeZone('UTC'));
-  $entity->field_ding_event_date[LANGUAGE_NONE][0]['value2'] = $date_end->date;
+  $value = $date_end->format('Y:m:d H:i:s');
+  $entity->field_ding_event_date[LANGUAGE_NONE][0]['value2'] = $value;
 }
 
 /**
