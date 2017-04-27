@@ -50,7 +50,7 @@ msgstr ""
 
 #: ding_billetexpressen_import.admin.inc:202;233
 msgid "Mapping"
-msgstr "Kobling"
+msgstr ""
 
 #: ding_billetexpressen_import.admin.inc:202
 msgid "Library"
@@ -74,7 +74,7 @@ msgstr ""
 
 #: ding_billetexpressen_import.module:144
 msgid "Tickets available"
-msgstr ""
+msgstr "Billetter"
 
 #: ding_billetexpressen_import.module:151
 msgid "kr."
@@ -82,7 +82,7 @@ msgstr ""
 
 #: ding_billetexpressen_import.module:151
 msgid "available tickets"
-msgstr ""
+msgstr "tilgængelige billetter"
 
 #: ding_billetexpressen_import.module:156
 msgid "Book a ticket"
