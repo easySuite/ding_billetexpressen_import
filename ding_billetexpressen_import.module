@@ -100,6 +100,11 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   $date_end->setTimezone(new DateTimeZone('UTC'));
   $value = $date_end->format('Y:m:d H:i:s');
   $entity->field_ding_event_date[LANGUAGE_NONE][0]['value2'] = $value;
+
+  // Make sure ticket price is numeric.
+  if (isset($item['ticket_price'])) {
+    $entity->field_ding_event_price[LANGUAGE_NONE][0]['value'] = (int) $item['ticket_price'];
+  }
 }
 
 /**

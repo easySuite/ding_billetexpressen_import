@@ -203,7 +203,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'tickets' => array(
             'name' => 'Tickets',
-            'value' => 'Tickets',
+            'value' => 'Tickets[1]',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
@@ -211,7 +211,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'ticket' => array(
             'name' => 'Ticket',
-            'value' => 'Tickets/Ticket',
+            'value' => 'Tickets[1]/Ticket',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
@@ -219,7 +219,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'ticket_name' => array(
             'name' => 'Ticket:Name',
-            'value' => 'Tickets/Ticket/Name',
+            'value' => 'Tickets[1]/Ticket/Name',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
@@ -227,7 +227,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'ticket_price' => array(
             'name' => 'Ticket:Price',
-            'value' => 'Tickets/Ticket/Price',
+            'value' => 'Tickets[1]/Ticket/Price',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
@@ -235,7 +235,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'tickets_availabletickets' => array(
             'name' => 'Ticket:AvailableTickets',
-            'value' => 'Tickets/Ticket/AvailableTickets',
+            'value' => 'Tickets[1]/Ticket/AvailableTickets',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
@@ -243,7 +243,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           'ticket_soldout' => array(
             'name' => 'Ticket:SoldOut',
-            'value' => 'Tickets/Ticket/SoldOut',
+            'value' => 'Tickets[1]/Ticket/SoldOut',
             'raw' => 0,
             'inner' => 0,
             'debug' => 0,
