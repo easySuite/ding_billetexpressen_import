@@ -4,3 +4,34 @@
   margin-left: 10px;
   padding: 10px;
 }
+
+#ding-billetexpressen-import-admin-form table input[type=email], input[type=password], input[type=text] {
+  width: auto;
+  height: 25px;
+  border-radius: initial;
+}
+
+#ding-billetexpressen-import-admin-form table select {
+  width: 300px;
+  height: 25px;
+  position: initial;
+}
+
+#ding-billetexpressen-import-admin-form input.form-submit, a.button {
+  width: 100px;
+  height: 25px;
+}
+
+.form-item-ding-billetexpressen-import-status label.option::before, label.option::after, input[type=radio]:checked+label::after, input[type=radio]+label::after {
+  background-color: initial;
+  width: 0;
+  height: 0;
+}
+
+.form-item-ding-billetexpressen-import-status input[type=radio]+label {
+  display: inline-block;
+}
+
+#ding-billetexpressen-import-admin-form .form-radio {
+  display: inline-block;
+}

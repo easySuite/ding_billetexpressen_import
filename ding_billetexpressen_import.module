@@ -107,19 +107,4 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   }
 }
 
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Add default value to the import page.
- */
-function ding_billetexpressen_import_form_feeds_import_form_alter(&$form, &$form_state, $form_id) {
-  $args = arg();
-  if ($args[0] == 'import' && $args[1] == 'billetexpressen_events') {
-    $form['feeds']['FeedsHTTPFetcher']['source']['#default_value'] = variable_get('ding_billetexpressen_import_url', '');
-    $form['#attached'] = array(
-        'css' => array(
-          drupal_get_path('module', 'ding_billetexpressen_import') . '/css/ding_billetexpressen_import.css'
-        ),
-      );
-  }
-}
+drupal_add_css(drupal_get_path('module', 'ding_billetexpressen_import') . '/css/ding_billetexpressen_import.css');
