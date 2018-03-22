@@ -107,4 +107,19 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   }
 }
 
-drupal_add_css(drupal_get_path('module', 'ding_billetexpressen_import') . '/css/ding_billetexpressen_import.css');
+/**
+ * Implements hook_css_alter().
+ *
+ * Remove styles that are not necessary for panel page.
+ */
+function ding_billetexpressen_import_css_alter(&$css) {
+  $args = arg();
+
+  if ($args[0] == 'billetexpressen') {
+    foreach (array_keys($css) as $path) {
+      if (strpos($path, 'ddbasic') !== FALSE) {
+        unset($css[$path]);
+      }
+    }
+  }
+}
