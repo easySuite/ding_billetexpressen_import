@@ -105,6 +105,15 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   if (isset($item['ticket_price'])) {
     $entity->field_ding_event_price[LANGUAGE_NONE][0]['value'] = (int) $item['ticket_price'];
   }
+
+  // Prepare field location.
+  $entity->field_ding_event_location[LANGUAGE_NONE][0] = array(
+    'locality' => $item['location_city'],
+    'postal_code' => $item['location_zip'],
+    'thoroughfare' => $item['location_address_1'],
+    'name_line' => $item['location_name'],
+    'country' => 'DK',
+  );
 }
 
 /**
