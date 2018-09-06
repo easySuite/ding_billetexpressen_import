@@ -24,6 +24,9 @@ function ding_billetexpressen_import_feeds_importer_default() {
         'use_pubsubhubbub' => 0,
         'designated_hub' => '',
         'request_timeout' => '30',
+        'auto_scheme' => 'http',
+        'accept_invalid_cert' => 0,
+        'cache_http_result' => 1,
       ),
     ),
     'parser' => array(
@@ -255,7 +258,7 @@ function ding_billetexpressen_import_feeds_importer_default() {
         'source_encoding' => array(
           0 => 'auto',
         ),
-        'use_tidy' => 1,
+        'use_tidy' => FALSE,
       ),
     ),
     'processor' => array(
@@ -303,13 +306,13 @@ function ding_billetexpressen_import_feeds_importer_default() {
           ),
           7 => array(
             'source' => 'image_url',
-            'target' => 'field_ding_event_title_image',
-            'unique' => FALSE,
+            'target' => 'field_ding_event_title_image:uri',
+            'file_exists' => '0',
           ),
           8 => array(
             'source' => 'image_url',
-            'target' => 'field_ding_event_list_image',
-            'unique' => FALSE,
+            'target' => 'field_ding_event_list_image:uri',
+            'file_exists' => '0',
           ),
           9 => array(
             'source' => 'location_address_1',
@@ -352,6 +355,9 @@ function ding_billetexpressen_import_feeds_importer_default() {
         'input_format' => 'ding_wysiwyg',
         'skip_hash_check' => 1,
         'bundle' => 'ding_event',
+        'insert_new' => '1',
+        'update_non_existent' => 'skip',
+        'language' => 'und',
       ),
     ),
     'content_type' => '',

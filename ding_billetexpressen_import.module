@@ -5,10 +5,7 @@
  */
 
 include_once 'ding_billetexpressen_import.features.inc';
-/**
- * @file
- * Module hooks are defined here.
- */
+
 /**
  * Implements hook_menu().
  */
@@ -114,6 +111,22 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
     'name_line' => $item['location_name'],
     'country' => 'DK',
   );
+
+  // Processing images.
+  $image_address = $item['image_url'];
+  $types = ['list_image', 'title_image'];
+
+  if (empty($entity->field_ding_event_title_image[LANGUAGE_NONE][0]) || empty($entity->field_ding_event_list_image[LANGUAGE_NONE][0])) {
+    foreach ($types as $type) {
+      if (!empty($image_address)) {
+        $file_info = system_retrieve_file($image_address, "public://{$type}/event", TRUE, TRUE);
+        if (!empty($file_info->fid)) {
+          $entity->field_ding_event_title_image[LANGUAGE_NONE][0]['fid'] = $file_info->fid;
+          $entity->field_ding_event_list_image[LANGUAGE_NONE][0]['fid'] = $file_info->fid;
+        }
+      }
+    }
+  }
 }
 
 /**
