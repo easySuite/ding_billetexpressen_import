@@ -307,12 +307,12 @@ function ding_billetexpressen_import_feeds_importer_default() {
           7 => array(
             'source' => 'image_url',
             'target' => 'field_ding_event_title_image:uri',
-            'file_exists' => '0',
+            'file_exists' => '1',
           ),
           8 => array(
             'source' => 'image_url',
             'target' => 'field_ding_event_list_image:uri',
-            'file_exists' => '0',
+            'file_exists' => '1',
           ),
           9 => array(
             'source' => 'location_address_1',

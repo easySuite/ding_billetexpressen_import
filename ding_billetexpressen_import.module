@@ -119,7 +119,7 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
   if (empty($entity->field_ding_event_title_image[LANGUAGE_NONE][0]) || empty($entity->field_ding_event_list_image[LANGUAGE_NONE][0])) {
     foreach ($types as $type) {
       if (!empty($image_address)) {
-        $file_info = system_retrieve_file($image_address, "public://{$type}/event", TRUE, TRUE);
+        $file_info = system_retrieve_file($image_address, "public://{$type}/event", TRUE, FILE_EXISTS_REPLACE);
         if (!empty($file_info->fid)) {
           $entity->field_ding_event_title_image[LANGUAGE_NONE][0]['fid'] = $file_info->fid;
           $entity->field_ding_event_list_image[LANGUAGE_NONE][0]['fid'] = $file_info->fid;
