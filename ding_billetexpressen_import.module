@@ -40,6 +40,13 @@ function ding_billetexpressen_import_menu() {
     'delivery callback' => 'ajax_deliver',
   );
 
+  $items['admin/config/ding/billetexpressen/cleanup'] = array(
+    'title' => 'Billetexpressen cleanup duplicated images',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_billetexpressen_cleanup_form'),
+  );
+
   return $items;
 }
 
@@ -144,4 +151,107 @@ function ding_billetexpressen_import_css_alter(&$css) {
       }
     }
   }
+}
+
+/**
+ * Images cleanup settings form.
+ */
+function ding_billetexpressen_cleanup_form($form, &$form_state) {
+  $form = [];
+
+  $form['ding_billetexpressen_cleanup_items_limit'] = [
+    '#type' => 'textfield',
+    '#title' => t('Limit'),
+    '#default_value' => '100',
+    '#required' => TRUE,
+  ];
+
+  $form['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Start processing'),
+  ];
+
+  return $form;
+}
+
+/**
+ * Images cleanup submit.
+ */
+function ding_billetexpressen_cleanup_form_submit($form, &$form_state) {
+  $limit = $form_state['values']['ding_billetexpressen_cleanup_items_limit'];
+
+  $query = db_select('file_managed', 'fm');
+  $query->fields('fm', ['fid']);
+  $query->leftJoin('file_usage', 'fu', 'fm.fid = fu.fid');
+  $query->leftJoin('node', 'n', 'fu.id = n.nid');
+  $query->where("(fu.type = 'node' OR fu.type IS NULL) AND n.nid IS NULL");
+  $query->condition('fm.uid', 0);
+  $result = $query->execute()->fetchAllKeyed(0, 0);
+
+  $chunks = array_chunk($result, $limit, TRUE);
+
+  $num_operations = count($result);
+
+  $operations = [];
+  foreach ($chunks as $chunk) {
+    $operations[] = [
+      'ding_billetexpressen_cleanup_batch',
+      [
+        $chunk,
+        [
+          'max' => $num_operations,
+          'chunk' => $limit,
+        ],
+      ],
+    ];
+  }
+
+  $batch = [
+    'operations' => $operations,
+    'title' => t('Deleting stale files'),
+    'init_message' => t('Initializing'),
+    'error_message' => t('An error occurred'),
+    'finished' => 'ding_billetexpressen_cleanup_finished',
+  ];
+
+  batch_set($batch);
+  batch_process('admin/config/ding/billetexpressen/cleanup');
+}
+
+/**
+ * Deleting stale files.
+ */
+function ding_billetexpressen_cleanup_batch($rows, $context) {
+  // Define variables on start of batch operation.
+  if (!isset($context['results']['progress'])) {
+    $context['results']['progress'] = 0;
+    $context['results']['chunk'] = $context['chunk'];
+    $context['results']['max'] = $context['max'];
+    $context['results']['failed'] = [];
+  }
+
+  $files_array = 0;
+  $files = entity_load('file', $rows);
+  foreach ($files as $file) {
+    file_delete($file);
+    $files_array++;
+  }
+
+  $context['results']['progress'] = $context['results']['progress'] + count($rows);
+
+  $context['message'] = t('Removed @files files.', ['@files' => $files_array]);
+
+  if ($context['results']['progress'] != $context['results']['max']) {
+    $context['finished'] = $context['results']['progress'] % $context['results']['max'];
+  }
+}
+
+/**
+ * Utility function.
+ */
+function ding_billetexpressen_cleanup_finished($success, $results, $operations) {
+  if ($success) {
+    $message = count($results) . ' processed.';
+  }
+  drupal_set_message(t($message));
 }
