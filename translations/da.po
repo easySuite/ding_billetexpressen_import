@@ -78,7 +78,7 @@ msgstr "Billetter"
 
 #: ding_billetexpressen_import.module:151
 msgid "kr."
-msgstr ""
+msgstr "kr."
 
 #: ding_billetexpressen_import.module:151
 msgid "available tickets"
