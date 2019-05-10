@@ -134,6 +134,29 @@ function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity,
       }
     }
   }
+
+  // Set flags on import.
+  $flags_array = [];
+  $flags = flag_get_flags('node', 'ding_event');
+
+  foreach ($flags as $flag) {
+    $flags_array[$flag->name] = variable_get('flag_' . $flag->name . '_default_ding_event', '');
+  }
+
+  foreach ($flags_array as $key => $item) {
+    $entity->flag[$key] = $item;
+  }
+
+  // Don't change flags value on manually edited nodes.
+  if (!empty($entity->nid)) {
+    $entity->flag = array();
+    $existing_flags = flag_get_content_flags('node', $entity->nid);
+    $existing_flags = reset($existing_flags);
+
+    foreach ($existing_flags as $name => $existing_flag) {
+      $entity->flag[$name] = 1;
+    }
+  }
 }
 
 /**
