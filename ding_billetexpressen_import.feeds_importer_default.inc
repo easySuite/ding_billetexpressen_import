@@ -132,14 +132,6 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'debug' => 0,
             'weight' => '12',
           ),
-          'rooms' => array(
-            'name' => 'Rooms',
-            'value' => 'Auditorium',
-            'raw' => 0,
-            'inner' => 0,
-            'debug' => 0,
-            'weight' => '13',
-          ),
           'image_url' => array(
             'name' => 'Image URL',
             'value' => 'PictureLinkOriginal',
@@ -252,6 +244,14 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'debug' => 0,
             'weight' => '27',
           ),
+          'place' => array(
+            'name' => 'Place',
+            'value' => 'Auditorium',
+            'raw' => 0,
+            'inner' => 0,
+            'debug' => 0,
+            'weight' => '28',
+          ),
         ),
         'display_errors' => 1,
         'debug_mode' => 1,
@@ -335,19 +335,18 @@ function ding_billetexpressen_import_feeds_importer_default() {
             'unique' => FALSE,
           ),
           13 => array(
-            'source' => 'rooms',
-            'target' => 'field_ding_event_rooms',
-            'term_search' => '0',
-            'autocreate' => 1,
-          ),
-          14 => array(
             'source' => 'ticketsalelink',
             'target' => 'field_ding_event_ticket_link:url',
             'unique' => FALSE,
           ),
-          15 => array(
+          14 => array(
             'source' => 'ticket_price',
             'target' => 'field_ding_event_price',
+            'unique' => FALSE,
+          ),
+          15 => array(
+            'source' => 'place',
+            'target' => 'field_ding_event_place',
             'unique' => FALSE,
           ),
         ),
