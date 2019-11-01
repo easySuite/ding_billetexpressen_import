@@ -70,6 +70,10 @@ function ding_billetexpressen_import_theme($existing, $type, $theme, $path) {
  * Implements hook_feeds_presave().
  */
 function ding_billetexpressen_import_feeds_presave(FeedsSource $source, $entity, $item) {
+  if ('billetexpressen_events' !== $source->id) {
+    return;
+  }
+
   // Map node category.
   $categories = variable_get('ding_billetexpressen_import_categories', array());
   foreach ($categories as $category) {
